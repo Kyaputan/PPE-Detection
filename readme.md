@@ -1,78 +1,80 @@
 # PPE Detection using YOLO
 
-ระบบตรวจจับการใส่อุปกรณ์ป้องกันส่วนบุคคล (PPE) ด้วยโมเดล YOLO  
-รองรับการตรวจครบต่อบุคคล เช่น Mask, Glove, Head Cover, PPE Coverall, Safety Shoes
+A system for detecting the use of Personal Protective Equipment (PPE) with the YOLO model.
+Supports per-person PPE verification, such as Mask, Glove, Head Cover, PPE Coverall, and Safety Shoes.
 
-## 📂 โครงสร้างโปรเจกต์
+## 📂 Project Structure
 
 ```
-ppe_yolo/
+PPE/
+│src/
+│ ├─ main.py                 # The entry point of the system
+│ ├─ config.py               # Configuration and constants
+│ ├─ detection.py            # Load YOLO model + run inference
+│ ├─ geometry.py             # Functions for area calculation, containment
+│ ├─ ppe_logic.py            # Manage PPE matching to persons and check completeness/absence
+│ ├─ drawing.py              # Draw bounding boxes and text on frames
+│ ├─ camera.py               # Manage camera and frame reading
+│ ├─ requirements.txt        # List of dependencies
 │
-├─ main.py                 # จุดเริ่มรันระบบ
-├─ config.py               # ค่าการตั้งค่าและค่าคงที่
-├─ detection.py            # โหลดโมเดล YOLO + รัน inference
-├─ geometry.py             # ฟังก์ชันคำนวณพื้นที่, containment
-├─ ppe_logic.py            # จัดการจับคู่ PPE ต่อบุคคล และตรวจครบ/ขาด
-├─ drawing.py              # วาดกรอบและข้อความบนเฟรม
-├─ camera.py               # จัดการกล้องและการอ่านเฟรม
-├─ requirements.txt        # รายการ dependencies
+│weights/
+│ ├─ PPE.pt               # Trained model
 │
-├─ weights/
-│   └─ PPE.pt               # โมเดลที่เทรนแล้ว
+defaults.yaml
 ```
 
-## 📦 การติดตั้ง
+## 📦 Installation
 
-1. **โคลนโปรเจกต์**
+1. **Clone the project**
 ```bash
 git clone https://github.com/yourusername/ppe_yolo.git
 cd ppe_yolo
 ```
 
-2. **ติดตั้ง dependencies**
+2. **Install dependencies**
 ```bash
 pip install -r requirements.txt
 ```
 
-3. **วางไฟล์โมเดล**
-   - วางไฟล์ `PPE.pt` ที่เทรนแล้วไว้ในโฟลเดอร์ `weights/`
+3. **Place the model file**
+   - Place the trained model file `PPE.pt` in the `weights/` folder
 
-## ▶️ การรันระบบ
+## ▶️ Run the system
 
 ```bash
 python main.py
 ```
 
-ระบบจะเปิดกล้องเว็บแคม (หรือ RTSP ถ้าปรับใน `main.py`) และแสดงการตรวจ PPE ต่อบุคคล  
-กด `q` เพื่อออกจากโปรแกรม
+The system will open the webcam (or RTSP if configured in `main.py`) and display PPE detection per person.
+Press `q` to exit the program.
 
-## ⚙️ การตั้งค่า
+## ⚙️ Configuration
 
-ปรับค่าใน `config.py` ได้ เช่น:
+Adjust the values in `config.py` as needed:
 
-- `REQUIRED_CLASSES` : เซ็ต PPE ที่ต้องมีครบ
-- `PERSON_ALIASES` : ชื่อคลาสสำหรับคน (เช่น "human", "person")
-- `CONF_THRESH` : ค่าความมั่นใจต่ำสุดที่รับ
-- `MODEL_CONF` : ค่าความมั่นใจที่ส่งเข้า YOLO ตอนรัน
-- `CONTAINMENT_RATIO` : สัดส่วน PPE ที่ต้องอยู่ในกรอบคน
-- `PERSON_PAD_PX` : ระยะขยายกรอบคน
+- `REQUIRED_CLASSES` : Set PPE that must be complete
+- `PERSON_ALIASES` : Class names for people (e.g., "human", "person")
+- `CONF_THRESH` : Minimum confidence threshold
+- `MODEL_CONF` : Confidence threshold for YOLO inference
+- `CONTAINMENT_RATIO` : PPE ratio that must be inside the person's frame
+- `PERSON_PAD_PX` : Frame padding for people
 
-## 🖼️ การตรวจแบบเฟรมเว้นเฟรม
+## 🖼️ Frame Skipping
 
-ใน `main.py` ปรับค่า:
+Adjust the values in `main.py`:
 
 ```python
-infer_every_n = 1   # ตรวจทุกเฟรม
-infer_every_n = 2   # ตรวจทุก 2 เฟรม
+infer_every_n = 1   # Infer every frame
+infer_every_n = 2   # Infer every 2 frames
 ```
 
-ถ้าใช้ค่ามากกว่า 1 จะลดโหลดการประมวลผล แต่มีโอกาสพลาดวัตถุที่ผ่านเร็ว
+If using a value greater than 1 will reduce processing load but may miss objects passing by quickly.
 
-## 📌 ฟีเจอร์
+## 📌 Features
 
-- ตรวจจับ PPE ต่อบุคคล
-- ปรับกล้องเป็นเว็บแคมหรือ RTSP ได้
-- เฟรมเว้นเฟรมเพื่อลดโหลด
-- จัดโค้ดเป็นโมดูล ดูแลแก้ไขง่าย
+- Detect PPE per person
+- Adjust camera to webcam or RTSP
+- Frame skipping to reduce load
+- Organize code into modules for easy maintenance
 
 ---
