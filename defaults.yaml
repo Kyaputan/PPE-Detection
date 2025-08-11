@@ -1,0 +1,18 @@
+app:
+  name: "PPE Detection"
+input:
+  source: "0"   
+  width: 640
+  height: 640
+model:
+  weights: "weights/PPE.pt"
+  conf: 0.7
+  iou: 0.43
+ppe:
+  required: ["glove","mask","head_cover","ppe_overall","safety_shoes"]
+  aliases:
+    person: ["person","human","people"]
+output:
+  show: true
+  save_video: false
+
