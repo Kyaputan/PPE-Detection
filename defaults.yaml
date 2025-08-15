@@ -1,5 +1,7 @@
 app:
-  name: "PPE Detection"
+  Project: "PPE Detection"
+  Developer: "Rachata Singkhet"
+  Version: "1.0.0"
 input:
   source: "0"   
   width: 640
