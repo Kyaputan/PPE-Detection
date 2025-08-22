@@ -6,7 +6,7 @@ from camera import VideoSource, should_infer
 
 def main():
     model, class_names = load_model()
-    cam = VideoSource(0)        
+    cam = VideoSource('rtsp://root01:12345678@192.168.1.102:554/stream1', cv2.CAP_FFMPEG)        
     infer_every_n = 5           
     last_person_results = []
     last_ppes = []
@@ -16,7 +16,7 @@ def main():
         ok, frame = cam.read()
         if not ok:
             break
-
+        frame = cv2.resize(frame, (640, 640))
         if should_infer(frame_idx, infer_every_n):
             yres = infer(model, frame)
             dets = parse_detections(yres, class_names)
